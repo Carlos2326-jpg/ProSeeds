@@ -1,7 +1,4 @@
-// ============================================================
-// CARD - Card de Tarefa (seguindo wireframe)
-// Study+
-// ============================================================
+import { tarefaService } from "../../Services/tarefaService.js";
 
 import { useState } from "react";
 import {
@@ -36,11 +33,17 @@ const TarefaCard = ({
     setNovaSubtarefa("");
   };
 
-  const handleExcluirTarefa = () => {
-    if (window.confirm("Deseja excluir esta tarefa?")) {
+ const handleExcluirTarefa = async () => {
+  if (window.confirm("Deseja excluir esta tarefa?")) {
+    try {
+      await tarefaService.excluir(tarefa.id);
       excluirTarefa(tarefa.id, setTarefas, setSubtarefas);
+    } catch (err) {
+      console.error("Erro ao excluir tarefa:", err);
+      alert("Erro ao excluir tarefa. Verifique se o servidor está rodando.");
     }
-  };
+  }
+};
 
   return (
     <div style={styles.card}>
@@ -51,7 +54,7 @@ const TarefaCard = ({
           <span style={styles.tituloTarefa}>{tarefa.titulo}</span>
           <div style={styles.detalhes}>
             {tarefa.prazo && (
-              <span style={styles.detalheTexto}>📅 {tarefa.prazo}</span>
+                <span style={styles.detalheTexto}>📅 {tarefa.prazo.split("T")[0]}</span>
             )}
             {disciplina && (
               <span style={styles.detalheTexto}>📚 {disciplina.nome}</span>
