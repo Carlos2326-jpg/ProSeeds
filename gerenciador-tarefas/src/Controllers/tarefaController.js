@@ -1,8 +1,3 @@
-// ============================================================
-// CONTROLLER - Área 2: Tarefas, Subtarefas, Recorrência e Calendário
-// Study+
-// ============================================================
-
 import {
   tarefas,
   subtarefas,
@@ -11,10 +6,6 @@ import {
   novaSubtarefaBase,
   novoCronogramaBase,
 } from "../Services/model.js";
-
-// ============================================================
-// TAREFAS
-// ============================================================
 
 export const getTarefas = (usuario_id) => {
   return tarefas.filter((t) => t.usuario_id === usuario_id);
@@ -43,20 +34,17 @@ export const editarTarefa = (id, dados, setTarefas) => {
 
 export const excluirTarefa = (id, setTarefas, setSubtarefas) => {
   setTarefas((prev) => prev.filter((t) => t.id !== id));
-  // Remove subtarefas vinculadas
+
   setSubtarefas((prev) => prev.filter((s) => s.tarefa_id !== id));
 };
 
 export const alterarStatusTarefa = (id, novoStatus, setTarefas) => {
-  // novoStatus: "pendente" | "em_andamento" | "concluida"
+
   setTarefas((prev) =>
     prev.map((t) => (t.id === id ? { ...t, status: novoStatus } : t))
   );
 };
 
-// ============================================================
-// SUBTAREFAS
-// ============================================================
 
 export const getSubtarefasPorTarefa = (tarefa_id, subtarefasState) => {
   return subtarefasState.filter((s) => s.tarefa_id === tarefa_id);
@@ -83,20 +71,12 @@ export const excluirSubtarefa = (id, setSubtarefas) => {
   setSubtarefas((prev) => prev.filter((s) => s.id !== id));
 };
 
-// ============================================================
-// PROGRESSO DA TAREFA (RF04 / FS08)
-// ============================================================
-
 export const calcularProgresso = (tarefa_id, subtarefasState) => {
   const subs = subtarefasState.filter((s) => s.tarefa_id === tarefa_id);
   if (subs.length === 0) return 0;
   const concluidas = subs.filter((s) => s.concluida).length;
   return Math.round((concluidas / subs.length) * 100);
 };
-
-// ============================================================
-// RECORRÊNCIA E CRONOGRAMA (RF06 / FB05 / FB06)
-// ============================================================
 
 export const getCronogramas = (usuario_id, cronogramasState) => {
   return cronogramasState.filter((c) => c.usuario_id === usuario_id);
@@ -116,7 +96,6 @@ export const excluirCronograma = (id, setCronogramas) => {
   setCronogramas((prev) => prev.filter((c) => c.id !== id));
 };
 
-// Gera datas repetidas baseado na recorrência para exibir no calendário
 export const gerarDatasRecorrentes = (cronograma, meses = 3) => {
   const datas = [];
   const inicio = new Date(cronograma.data);
@@ -135,20 +114,21 @@ export const gerarDatasRecorrentes = (cronograma, meses = 3) => {
     } else if (cronograma.recorrencia === "mensal") {
       atual.setMonth(atual.getMonth() + 1);
     } else {
-      break; // sem recorrência, só uma data
+      break; 
     }
   }
 
   return datas;
 };
 
-// ============================================================
-// FILTROS (FS05)
-// ============================================================
-
 export const filtrarTarefas = (tarefasState, filtros) => {
   let resultado = [...tarefasState];
 
+  if (filtros.titulo) {
+    resultado = resultado.filter((t) =>
+      t.titulo.toLowerCase().includes(filtros.titulo.toLowerCase())
+    );
+  }
   if (filtros.status) {
     resultado = resultado.filter((t) => t.status === filtros.status);
   }
