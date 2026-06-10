@@ -1,5 +1,5 @@
-import TarefasPage from "../Pages/Tarefas/TarefasPage.jsx";
-import CalendarioPage from "../Pages/Calendario/CalendarioPage.jsx";
+import TarefasPage from "../Pages/Tarefas/TarefasPage.js";
+import CalendarioPage from "../Pages/Calendario/CalendarioPage.js";
 
 const rotasArea2 = [
   {
