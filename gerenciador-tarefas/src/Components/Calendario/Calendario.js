@@ -34,15 +34,12 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
     const diasMesAnterior = new Date(ano, mes, 0).getDate();
     const dias = [];
 
-    // Dias do mês anterior (preenchimento)
     for (let i = primeiroDia - 1; i >= 0; i--) {
       dias.push({ dia: diasMesAnterior - i, mesAtual: false });
     }
-    // Dias do mês atual
     for (let i = 1; i <= totalDias; i++) {
       dias.push({ dia: i, mesAtual: true });
     }
-    // Dias do próximo mês (preenchimento)
     const restante = 42 - dias.length;
     for (let i = 1; i <= restante; i++) {
       dias.push({ dia: i, mesAtual: false });
@@ -53,7 +50,12 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
   const getTarefasDoDia = (dia, mesAtual) => {
     if (!mesAtual) return [];
     const dataStr = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
-    const tarefasPrazo = tarefas.filter((t) => t.prazo === dataStr);
+
+    const tarefasPrazo = tarefas.filter((t) => {
+      const prazoFormatado = t.prazo ? t.prazo.split("T")[0] : "";
+      return prazoFormatado === dataStr;
+    });
+
     const tarefasRecorrentes = cronogramas
       .filter((c) => gerarDatasRecorrentes(c).includes(dataStr))
       .map((c) => tarefas.find((t) => t.id === c.tarefa_id))
@@ -104,13 +106,7 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
               key={index}
               style={{
                 ...styles.celula,
-                backgroundColor: isSelecionado
-                  ? "#d0d7ff"
-                  : isHoje
-                  ? "#fff"
-                  : item.mesAtual
-                  ? "#fff"
-                  : "#f5f5f5",
+                backgroundColor: isSelecionado ? "#d0d7ff" : isHoje ? "#fff" : item.mesAtual ? "#fff" : "#f5f5f5",
                 cursor: item.mesAtual ? "pointer" : "default",
                 opacity: item.mesAtual ? 1 : 0.4,
               }}
@@ -160,9 +156,6 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
   );
 };
 
-// ============================================================
-// ESTILOS
-// ============================================================
 const styles = {
   container: {
     display: "flex",
