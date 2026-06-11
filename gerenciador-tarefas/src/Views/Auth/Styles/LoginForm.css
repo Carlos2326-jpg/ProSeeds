@@ -18,7 +18,8 @@
   background-color: #d9d9d9;
 }
 
-.form-group {
+.input-group {
+>>>>>>> d4c0fed24bcc47a443a87c4fdb6fe4b57be81bec
   display: flex;
   align-items: center;
 }
@@ -31,11 +32,24 @@
   border-radius: 100%;
 }
 
-.form-actions {
+.input-field {
+  border: 1px solid black;
+  border-radius: 15px;
+
+  width: 366px;
+  height: 76px;
+
+  font-size: 24px;
+
+  margin: 30px;
+  padding: 10px;
+}
+
+.article-group {
   margin-top: 48px;
 }
 
-.form-actions > span {
+.article-group > a {
   font-size: 24px;
 
   margin: 0px 34px 0px 34px;

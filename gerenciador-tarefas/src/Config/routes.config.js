@@ -9,6 +9,9 @@ import RegisterPage from './pages/Login/RegisterPage';
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import PerfilPage from './pages/Perfil/PerfilPage';
 
+import TarefasPage from "../Pages/Tarefas/TarefasPage.js";
+import CalendarioPage from "../Pages/Calendario/CalendarioPage.js";
+
 const routes = [
   { path: '/login', element: <LoginPage />, private: false },
   { path: '/register', element: <RegisterPage />, private: false },
@@ -52,4 +55,15 @@ function RoutesConfig() {
   );
 }
 
-export default RoutesConfig;
+const rotasArea2 = [
+  {
+    path: "/tarefas",
+    element: <TarefasPage />,
+  },
+  {
+    path: "/calendario",
+    element: <CalendarioPage />,
+  },
+];
+
+export default rotasArea2;
