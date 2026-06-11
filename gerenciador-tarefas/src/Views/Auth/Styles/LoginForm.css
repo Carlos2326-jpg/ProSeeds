@@ -1,0 +1,61 @@
+@import url(../../../Assets/Styles/global.css);
+
+.forms {
+  border: 1px solid black;
+  border-radius: 20px;
+
+  width: 634px;
+  height: 626px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  margin-top: 67px;
+  margin-bottom: 88px;
+
+  background-color: #d9d9d9;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.img-forms {
+  width: 80px;
+  height: 80px;
+
+  border: 1px solid black;
+  border-radius: 100%;
+}
+
+.input-field {
+  border: 1px solid black;
+  border-radius: 15px;
+
+  width: 366px;
+  height: 76px;
+
+  font-size: 24px;
+
+  margin: 30px;
+  padding: 10px;
+}
+
+.article-group {
+  margin-top: 48px;
+}
+
+.article-group > a {
+  font-size: 24px;
+
+  margin: 0px 34px 0px 34px;
+
+  color: #0045f5;
+}
+
+.article-group > a:hover {
+  color: #0037c3;
+}
