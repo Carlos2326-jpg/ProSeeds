@@ -105,8 +105,88 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Dispara o envio de e-mail de recuperação
+  const handleForgotPassword = async (email) => {
+    setErro('');
+    setLoading(true);
+
+    if (!email) {
+      setErro('Por favor, informe o seu e-mail.');
+      setLoading(false);
+      return { sucesso: false, mensagem: 'E-mail obrigatório.' };
+    }
+
+    try {
+      const data = await authService.forgotPassword(email);
+      setLoading(false);
+      return { sucesso: true, mensagem: data.message || 'Link enviado com sucesso para o seu e-mail!' };
+    } catch (err) {
+      setErro(err);
+      setLoading(false);
+      return { sucesso: false, mensagem: err };
+    }
+  };
+
+  // Dispara a redefinição de senha com o token
+  const handleResetPassword = async (token, novaSenha, confirmarNovaSenha) => {
+    setErro('');
+    setLoading(true);
+
+    if (!novaSenha || !confirmarNovaSenha) {
+      setErro('Preencha os campos de senha.');
+      setLoading(false);
+      return false;
+    }
+
+    if (novaSenha !== confirmarNovaSenha) {
+      setErro('As senhas não coincidem.');
+      setLoading(false);
+      return false;
+    }
+
+    if (novaSenha.length < 6) {
+      setErro('A nova senha deve conter no mínimo 6 caracteres.');
+      setLoading(false);
+      return false;
+    }
+
+    try {
+      await authService.resetPassword(token, novaSenha);
+      setLoading(false);
+      return true;
+    } catch (err) {
+      setErro(err);
+      setLoading(false);
+      return false;
+    }
+  };
+
+  // Adicione esta função dentro do seu AuthProvider no src/controllers/authController.jsx
+
+  const handleValidarCodigo = async (email, codigo) => {
+    setErro('');
+    setLoading(true);
+
+    if (!codigo || codigo.length < 4) {
+      setErro('Por favor, insira o código de verificação completo.');
+      setLoading(false);
+      return { sucesso: false };
+    }
+
+    try {
+      const data = await authService.validateCode(email, codigo);
+      setLoading(false);
+      // Retorna o token temporário que o back-end gerou para permitir a troca de senha
+      return { sucesso: true, tokenTemporario: data.tokenTemporario };
+    } catch (err) {
+      setErro(err);
+      setLoading(false);
+      return { sucesso: false };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ usuario, loading, erro, handleLogin, handleLogout, handleRegister }}>
+    <AuthContext.Provider value={{ usuario, loading, erro, handleLogin, handleLogout, handleRegister, handleForgotPassword, handleResetPassword, handleValidarCodigo }}>
       {children}
     </AuthContext.Provider>
   );

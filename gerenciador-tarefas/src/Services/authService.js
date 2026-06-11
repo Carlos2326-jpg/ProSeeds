@@ -34,4 +34,26 @@ export const authService = {
       throw error.response?.data?.message || 'Erro ao criar conta. Tente novamente.';
     }
   },
+
+  // Adicione estes métodos dentro do objeto "authService" no seu src/services/authService.js
+
+  // Passo 1: Envia o e-mail do usuário solicitando o link de recuperação
+  forgotPassword: async (email) => {
+    try {
+      const response = await api.post('/auth/forgot-password', { email });
+      return response.data; // Espera-se uma mensagem de sucesso como { message: 'E-mail enviado' }
+    } catch (error) {
+      throw error.response?.data?.message || 'Erro ao processar solicitação de recuperação.';
+    }
+  },
+
+  // Passo 2: Envia a nova senha acompanhada do token recebido por e-mail
+  resetPassword: async (token, novaSenha) => {
+    try {
+      const response = await api.post('/auth/reset-password', { token, senha: novaSenha });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data?.message || 'Erro ao redefinir a senha. Token inválido ou expirado.';
+    }
+  },
 };
