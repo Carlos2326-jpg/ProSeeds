@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { authService } from '../services/authService';
+import { authService } from '../Services/authService';
 
 const AuthContext = createContext({});
 
@@ -64,8 +64,49 @@ export const AuthProvider = ({ children }) => {
     setUsuario(null);
   };
 
+  const handleRegister = async (nome, email, senha, confirmarSenha) => {
+    setErro('');
+    setLoading(true);
+
+    // Validações de Regra de Negócio no Front-end
+    if (!nome || !email || !senha || !confirmarSenha) {
+      setErro('Todos os campos são obrigatórios.');
+      setLoading(false);
+      return false;
+    }
+
+    if (senha !== confirmarSenha) {
+      setErro('As senhas não coincidem.');
+      setLoading(false);
+      return false;
+    }
+
+    if (senha.length < 6) {
+      setErro('A senha deve conter no mínimo 6 caracteres.');
+      setLoading(false);
+      return false;
+    }
+
+    try {
+      const data = await authService.register(nome, email, senha);
+
+      // Se o seu back-end já autenticar o usuário direto no cadastro trazendo o token:
+      if (data.token && data.usuario) {
+        localStorage.setItem('@App:token', data.token);
+        setUsuario(data.usuario);
+      }
+
+      setLoading(false);
+      return true; // Cadastro efetuado com sucesso
+    } catch (err) {
+      setErro(err);
+      setLoading(false);
+      return false; // Falha no cadastro
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ usuario, loading, erro, handleLogin, handleLogout }}>
+    <AuthContext.Provider value={{ usuario, loading, erro, handleLogin, handleLogout, handleRegister }}>
       {children}
     </AuthContext.Provider>
   );

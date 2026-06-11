@@ -10,7 +10,7 @@ function Button({
   disabled = false,
   imgSrc = null,      // Caminho da imagem
   imgAlt = null,   // Texto alternativo
-  imgPosition = 'left' // Posição: 'left' ou 'right'
+  imgPosition = 'right' // Posição: 'left' ou 'right'
 }) {
   return (
     <button

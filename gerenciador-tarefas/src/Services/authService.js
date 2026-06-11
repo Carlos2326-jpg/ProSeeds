@@ -20,5 +20,18 @@ export const authService = {
     } catch (error) {
       throw error.response?.data?.message || 'Sessão inválida.';
     }
-  }
+  },
+
+  // Adicione este método dentro do objeto "authService" no seu src/services/authService.js
+
+  // Realiza a chamada de cadastro de um novo usuário
+  register: async (nome, email, senha) => {
+    try {
+      const response = await api.post('/auth/register', { nome, email, senha });
+      return response.data; // Espera-se { token: '...', usuario: { id, nome, email } } ou mensagem de sucesso
+    } catch (error) {
+      // Captura mensagens de erro do servidor (ex: "E-mail já cadastrado")
+      throw error.response?.data?.message || 'Erro ao criar conta. Tente novamente.';
+    }
+  },
 };

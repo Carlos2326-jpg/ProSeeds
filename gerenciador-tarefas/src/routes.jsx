@@ -1,23 +1,22 @@
-<<<<<<< HEAD
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './Controllers/authController';
 
-// Importação das suas páginas (Views)
-import { LoginPage } from './Views/Auth/LoginPage';
-//import { CadastroPage } from './pages/Cadastro/CadastroPage';
-// import { PerfilPage } from './pages/Perfil/PerfilPage';
-// import { DashboardPage } from './pages/Dashboard/DashboardPage';
+// 📌 IMPORTAÇÃO DAS VIEWS (PÁGINAS)
+import { LoginPage } from './Pages/Auth/LoginPage';
+import { CadastroPage } from './Pages/Cadastro/CadastroPage';
+// import DashboardPage from './Pages/Dashboard/DashboardPage';
+import TarefasPage from './Pages/Tarefas/TarefasPage';       // 🔥 ATIVADO
+import CalendarioPage from './Pages/Calendario/CalendarioPage'; // 🔥 ATIVADO
 
 /**
- * 🔒 Componente de Proteção de Rotas (Regra de Negócio na View)
- * Ele verifica no Controller se o usuário está logado.
- * Se não estiver, redireciona imediatamente para o /login.
+ * 🔒 Componente de Proteção de Rotas (Controller -> View)
+ * Verifica no controlador se o usuário está autenticado.
  */
 const RotaProtegida = ({ children }) => {
   const { usuario, loading } = useAuth();
 
-  // Enquanto o Controller checa se existe um token salvo, exibe uma tela de carregamento
+  // Enquanto o Controller checa se existe um token salvo
   if (loading) {
     return <div className="loading-screen">Carregando...</div>;
   }
@@ -27,7 +26,6 @@ const RotaProtegida = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // Se estiver logado, permite que o componente filho seja renderizado
   return children;
 };
 
@@ -35,17 +33,35 @@ const RouterComponent = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes (Rotas Públicas) */}
+        {/* 🔓 ROTAS PÚBLICAS */}
         <Route path="/login" element={<LoginPage />} />
-        {/* <Route path="/register" element={<CadastroPage />} /> */}
+        <Route path="/register" element={<CadastroPage />} />
 
-        {/* Protected Routes (Rotas Privadas/Protegidas) */}
+        {/* 🔒 ROTAS PROTEGIDAS (Exigem Autenticação) */}
         <Route
           path="/dashboard"
           element={
             <RotaProtegida>
+              <div style={{ padding: '20px' }}><h1>Bem-vindo ao Dashboard!</h1></div>
               {/* <DashboardPage /> */}
-              <div style={{ padding: '20px' }}><h1>Bem-vindo ao Dashboard! (Logado)</h1></div>
+            </RotaProtegida>
+          }
+        />
+
+        <Route
+          path="/tarefas"
+          element={
+            <RotaProtegida>
+              <TarefasPage /> {/* 🔥 ATIVADO — Renderiza sua tela de tarefas */}
+            </RotaProtegida>
+          }
+        />
+
+        <Route
+          path="/calendario"
+          element={
+            <RotaProtegida>
+              <CalendarioPage /> {/* 🔥 ATIVADO — Renderiza sua tela de calendário */}
             </RotaProtegida>
           }
         />
@@ -54,13 +70,15 @@ const RouterComponent = () => {
           path="/perfil"
           element={
             <RotaProtegida>
-              {/* <PerfilPage /> */}
-              <div style={{ padding: '20px' }}><h1>Seu Perfil (Logado)</h1></div>
+              <div style={{ padding: '20px' }}><h1>Seu Perfil</h1></div>
             </RotaProtegida>
           }
         />
 
-        {/* Rota de fallback: Qualquer endereço inválido joga para o login ou dashboard */}
+        {/* 🔄 REDIRECIONAMENTOS DE FALLBACK */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+        {/* Qualquer endereço inválido joga para o login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
@@ -68,20 +86,3 @@ const RouterComponent = () => {
 };
 
 export default RouterComponent;
-=======
-import { Routes, Route, Navigate } from "react-router-dom";
-import TarefasPage from "./Pages/Tarefas/TarefasPage.js";
-import CalendarioPage from "./Pages/Calendario/CalendarioPage.js";
-
-const AppRoutes = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/tarefas" />} />
-      <Route path="/tarefas" element={<TarefasPage />} />
-      <Route path="/calendario" element={<CalendarioPage />} />
-    </Routes>
-  );
-};
-
-export default AppRoutes;
->>>>>>> d4c0fed24bcc47a443a87c4fdb6fe4b57be81bec

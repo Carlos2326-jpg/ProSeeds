@@ -4,8 +4,8 @@
   border: 1px solid black;
   border-radius: 20px;
 
-  width: 634px;
-  height: 626px;
+  width: 626px;
+  height: 634px;
 
   display: flex;
   justify-content: center;
@@ -18,8 +18,7 @@
   background-color: #d9d9d9;
 }
 
-.input-group {
->>>>>>> d4c0fed24bcc47a443a87c4fdb6fe4b57be81bec
+.form-group {
   display: flex;
   align-items: center;
 }
@@ -45,11 +44,14 @@
   padding: 10px;
 }
 
-.article-group {
+.form-actions {
   margin-top: 48px;
+
+  display: flex;
+  justify-content: space-around;
 }
 
-.article-group > a {
+.form-actions > span {
   font-size: 24px;
 
   margin: 0px 34px 0px 34px;

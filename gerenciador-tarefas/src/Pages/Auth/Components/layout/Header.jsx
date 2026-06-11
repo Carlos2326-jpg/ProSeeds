@@ -1,11 +1,12 @@
 import React from 'react';
 import "../../Styles/header.css";
 
-function Header() {
+function Header({ titulo }) {
   return (
     <div className="header">
       <header>
-        <h1 className="header-title">Login</h1>
+        {/* 🔥 O conteúdo do h1 passa a ser dinâmico */}
+        <h1 className="header-title">{titulo}</h1>
       </header>
     </div>
   );
