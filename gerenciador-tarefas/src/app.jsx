@@ -1,12 +1,13 @@
-import { BrowserRouter } from "react-router-dom";
-import AppRoutes from "./routes.jsx";
+import React from 'react';
+import { AuthProvider } from './Controllers/authController';
+import RouterComponent from './routes'; // Importa o seu arquivo unificado com BrowserRouter
 
-const App = () => {
+function App() {
   return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
+    <AuthProvider>
+      <RouterComponent />
+    </AuthProvider>
   );
-};
+}
 
 export default App;

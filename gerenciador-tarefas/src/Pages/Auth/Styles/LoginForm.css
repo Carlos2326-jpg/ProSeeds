@@ -1,11 +1,11 @@
 @import url(../../../Assets/Styles/global.css);
 
-.forms {
+.login-form {
   border: 1px solid black;
   border-radius: 20px;
 
-  width: 634px;
-  height: 626px;
+  width: 626px;
+  height: aute;
 
   display: flex;
   justify-content: center;
@@ -18,7 +18,7 @@
   background-color: #d9d9d9;
 }
 
-.input-group {
+.form-group {
   display: flex;
   align-items: center;
 }
@@ -44,11 +44,14 @@
   padding: 10px;
 }
 
-.article-group {
+.form-actions {
   margin-top: 48px;
+
+  display: flex;
+  justify-content: space-around;
 }
 
-.article-group > a {
+.form-actions > span {
   font-size: 24px;
 
   margin: 0px 34px 0px 34px;
@@ -56,6 +59,6 @@
   color: #0045f5;
 }
 
-.article-group > a:hover {
+.form-actions > span:hover {
   color: #0037c3;
 }
