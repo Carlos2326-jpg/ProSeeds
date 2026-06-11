@@ -57,7 +57,16 @@ const TarefaForm = ({ tarefaExistente = null, disciplinas = [], onSalvar, onCanc
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.titulo.trim()) return alert("Título é obrigatório!");
-    onSalvar(form, subtarefasForm);
+
+    // Monta o payload final tratando os tipos de dados para o MySQL
+    const dadosFormatados = {
+      ...form,
+      // Se tiver vazio, envia null. Se tiver selecionado, força virar um Número Inteiro.
+      disciplina_id: form.disciplina_id === "" ? null : parseInt(form.disciplina_id, 10),
+    };
+
+    // Repassa os dados já higienizados para a TarefasPage processar
+    onSalvar(dadosFormatados, subtarefasForm);
   };
 
   return (

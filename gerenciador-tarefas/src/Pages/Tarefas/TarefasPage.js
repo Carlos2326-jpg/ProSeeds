@@ -51,30 +51,61 @@ const TarefasPage = () => {
   };
 
   const handleSalvar = async (dados, subtarefasForm = []) => {
-    try {
-      if (tarefaEditando) {
-        await tarefaService.atualizar(tarefaEditando.id, dados);
-        setTarefas((prev) =>
-          prev.map((t) => (t.id === tarefaEditando.id ? { ...t, ...dados } : t))
-        );
-      } else {
-        const novaTarefa = await tarefaService.criar({ ...dados, usuario_id: 1 });
-        setTarefas((prev) => [...prev, novaTarefa]);
+  try {
+    if (tarefaEditando) {
+      // --- EDIÇÃO DE TAREFA ---
+      await tarefaService.atualizar(tarefaEditando.id, dados);
+      
+      setTarefas((prev) =>
+        prev.map((t) =>
+          t.id === tarefaEditando.id 
+            ? { 
+                ...t, 
+                ...dados, 
+                disciplina_id: dados.disciplina_id 
+              } 
+            : t
+        )
+      );
+    } else {
+      // --- CRIAÇÃO DE TAREFA ---
+      // 1. Cria a tarefa pai no banco
+      const novaTarefa = await tarefaService.criar({ ...dados, usuario_id: 1 });
+      
+      // Ajustado aqui: Variável corrigida sem espaços vazios
+      const tarefaProntaParaCard = {
+        ...dados,         
+        ...novaTarefa,     
+        disciplina_id: novaTarefa.disciplina_id !== undefined ? novaTarefa.disciplina_id : dados.disciplina_id
+      };
 
-        // Salva subtarefas no backend
-        for (const s of subtarefasForm) {
-          const novaSub = await subtarefaService.criar(novaTarefa.id, s.titulo);
-          setSubtarefas((prev) => [...prev, novaSub]);
-        }
+      // Atualiza a lista de tarefas
+      setTarefas((prev) => [...prev, tarefaProntaParaCard]);
+
+      // Array temporária para acumular as novas subtarefas
+      const novasSubtarefasSalvas = [];
+
+      // 2. Salva as subtarefas sequencialmente no backend
+      for (const s of subtarefasForm) {
+        const novaSub = await subtarefaService.criar(novaTarefa.id, s.titulo);
+        
+        novasSubtarefasSalvas.push({
+          ...novaSub,
+          tarefa_id: novaTarefa.id
+        });
       }
-    } catch (err) {
-      console.error("Erro ao salvar tarefa:", err);
-      alert("Erro ao salvar tarefa. Verifique se o servidor está rodando.");
-    }
 
-    setModalAberto(false);
-    setTarefaEditando(null);
-  };
+      // 3. Atualiza o estado das subtarefas
+      setSubtarefas((prev) => [...prev, ...novasSubtarefasSalvas]);
+    }
+  } catch (err) {
+    console.error("Erro ao salvar tarefa:", err);
+    alert("Erro ao salvar tarefa. Verifique se o servidor está rodando.");
+  }
+
+  setModalAberto(false);
+  setTarefaEditando(null);
+};
 
   const handleCancelar = () => {
     setModalAberto(false);

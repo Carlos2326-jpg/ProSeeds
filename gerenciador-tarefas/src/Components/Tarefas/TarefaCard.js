@@ -21,7 +21,7 @@ const TarefaCard = ({
   const [expandido, setExpandido] = useState(false);
   const [novaSubtarefa, setNovaSubtarefa] = useState("");
 
-  const disciplina = disciplinas.find((d) => d.id === tarefa.disciplina_id);
+  const disciplina = disciplinas.find((d) => d.id == tarefa.disciplina_id);
   const progresso = calcularProgresso(tarefa.id, subtarefasState);
   const subtarefasDaTarefa = subtarefasState.filter(
     (s) => s.tarefa_id === tarefa.id
