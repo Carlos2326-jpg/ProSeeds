@@ -12,7 +12,7 @@ import { ValidarCodigoPage } from './Pages/Auth/ValidarCodigoPage';   // Passo 2
 import { ResetarSenhaPage } from './Pages/Auth/ResetarSenhaPage';     // Passo 3: Altera a Senha
 
 // 📊 Páginas Internas (Protegidas)
-// import DashboardPage from './Pages/Dashboard/DashboardPage';
+import DashboardPage from './Pages/Dashboard/DashboardPage'; // 🔥 IMPORTAÇÃO ATIVADA AQUI
 import TarefasPage from './Pages/Tarefas/TarefasPage';
 import CalendarioPage from './Pages/Calendario/CalendarioPage';
 
@@ -54,8 +54,7 @@ const RouterComponent = () => {
           path="/dashboard"
           element={
             <RotaProtegida>
-              <div style={{ padding: '20px' }}><h1>Bem-vindo ao Dashboard!</h1></div>
-              {/* <DashboardPage /> */}
+              <DashboardPage />
             </RotaProtegida>
           }
         />
