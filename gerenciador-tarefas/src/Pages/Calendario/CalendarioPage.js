@@ -105,8 +105,28 @@ const CalendarioPage = () => {
   };
 
   const cronogramasFiltrados = cronogramas.filter((c) => {
-    if (filtros.disciplina_id && c.disciplina_id !== Number(filtros.disciplina_id)) return false;
-    if (filtros.recorrencia && c.recorrencia !== filtros.recorrencia) return false;
+  if (filtros.disciplina_id && c.disciplina_id !== Number(filtros.disciplina_id)) return false;
+  if (filtros.recorrencia && c.recorrencia !== filtros.recorrencia) return false;
+  if (filtros.data_inicio) {
+    const data = c.data ? c.data.split("T")[0] : "";
+    if (data < filtros.data_inicio) return false;
+  }
+  if (filtros.data_fim) {
+    const data = c.data ? c.data.split("T")[0] : "";
+    if (data > filtros.data_fim) return false;
+  }
+  if (filtros.status || filtros.prioridade) {
+    const tarefa = tarefas.find((t) => t.id === Number(c.tarefa_id));
+    if (filtros.status && tarefa?.status !== filtros.status) return false;
+    if (filtros.prioridade && tarefa?.prioridade !== filtros.prioridade) return false;
+  }
+  return true;
+});
+
+  const tarefasFiltradas = tarefas.filter((t) => {
+    if (filtros.disciplina_id && t.disciplina_id !== Number(filtros.disciplina_id)) return false;
+    if (filtros.status && t.status !== filtros.status) return false;
+    if (filtros.prioridade && t.prioridade !== filtros.prioridade) return false;
     return true;
   });
 
@@ -158,10 +178,10 @@ const CalendarioPage = () => {
         {/* Conteúdo principal */}
         <div style={styles.conteudo}>
 
-          {/* Calendário */}
-          <div style={styles.calendarioWrapper}>
-            <Calendario tarefas={tarefas} cronogramas={cronogramas} disciplinas={disciplinas} />
-          </div>
+        {/* Calendário */}
+      <div style={styles.calendarioWrapper}>
+        <Calendario tarefas={tarefasFiltradas} cronogramas={cronogramasFiltrados} disciplinas={disciplinas} />
+      </div>
 
           {/* Lista de Cronogramas */}
           <div style={styles.listaCronogramas}>
