@@ -47,7 +47,8 @@ const excluirTarefa = async (req, res) => {
     await TarefaModel.excluir(req.params.id);
     res.json({ mensagem: "Tarefa excluída com sucesso." });
   } catch (err) {
-    res.status(500).json({ erro: "Erro ao excluir tarefa." });
+    console.error("ERRO excluirTarefa:", err.message);
+    res.status(500).json({ erro: "Erro ao excluir tarefa.", detalhe: err.message });
   }
 };
 

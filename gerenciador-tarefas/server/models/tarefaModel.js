@@ -39,9 +39,11 @@ const TarefaModel = {
   },
 
   excluir: async (id) => {
-    await pool.query("DELETE FROM Tarefa WHERE id = ?", [id]);
-    return { id };
-  },
+  // Remove cronogramas vinculados antes de excluir a tarefa
+  await pool.query("DELETE FROM Cronograma WHERE tarefa_id = ?", [id]);
+  await pool.query("DELETE FROM Tarefa WHERE id = ?", [id]);
+  return { id };
+},
 };
 
 module.exports = TarefaModel;

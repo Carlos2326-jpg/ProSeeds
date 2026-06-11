@@ -7,13 +7,13 @@ const CronogramaModel = {
   },
 
   criar: async (dados) => {
-    const { usuario_id, disciplina_id, data, hora_inicio, hora_fim, recorrencia } = dados;
-    const [result] = await pool.query(
-      "INSERT INTO Cronograma (usuario_id, disciplina_id, data, hora_inicio, hora_fim, recorrencia) VALUES (?, ?, ?, ?, ?, ?)",
-      [usuario_id, disciplina_id, data, hora_inicio, hora_fim, recorrencia]
-    );
-    return { id: result.insertId, ...dados };
-  },
+  const { usuario_id, disciplina_id, tarefa_id, data, hora_inicio, hora_fim, recorrencia } = dados;
+  const [result] = await pool.query(
+    "INSERT INTO Cronograma (usuario_id, disciplina_id, tarefa_id, data, hora_inicio, hora_fim, recorrencia) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    [usuario_id, disciplina_id || null, tarefa_id || null, data, hora_inicio, hora_fim, recorrencia]
+  );
+  return { id: result.insertId, ...dados };
+},
 
   atualizar: async (id, dados) => {
     const { disciplina_id, data, hora_inicio, hora_fim, recorrencia } = dados;

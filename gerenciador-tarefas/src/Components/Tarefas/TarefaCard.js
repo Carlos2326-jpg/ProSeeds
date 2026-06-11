@@ -1,4 +1,4 @@
-import { tarefaService } from "../../Services/tarefaService.js";
+import { tarefaService, subtarefaService } from "../../Services/tarefaService.js";
 
 import { useState } from "react";
 import {
@@ -70,9 +70,15 @@ const TarefaCard = ({
           <select
             style={styles.selectStatus}
             value={tarefa.status}
-            onChange={(e) =>
-              alterarStatusTarefa(tarefa.id, e.target.value, setTarefas)
-            }
+            onChange={async (e) => {
+              const novoStatus = e.target.value;
+              alterarStatusTarefa(tarefa.id, novoStatus, setTarefas);
+              try {
+                await tarefaService.atualizar(tarefa.id, { ...tarefa, status: novoStatus });
+              } catch (err) {
+                console.error("Erro ao atualizar status:", err);
+              }
+            }}
           >
             <option value="pendente">Pendente</option>
             <option value="em_andamento">Em Andamento</option>
@@ -120,10 +126,17 @@ const TarefaCard = ({
           {subtarefasDaTarefa.map((sub) => (
             <div key={sub.id} style={styles.subtarefaItem}>
               <input
-                type="checkbox"
-                checked={sub.concluida}
-                onChange={() => toggleSubtarefa(sub.id, setSubtarefas)}
-              />
+              type="checkbox"
+              checked={sub.concluida}
+              onChange={async () => {
+                toggleSubtarefa(sub.id, setSubtarefas);
+                try {
+                  await subtarefaService.atualizar(sub.id, { ...sub, concluida: !sub.concluida });
+                } catch (err) {
+                  console.error("Erro ao atualizar subtarefa:", err);
+                }
+              }}
+            />
               <span
                 style={{
                   ...styles.subtarefaTexto,

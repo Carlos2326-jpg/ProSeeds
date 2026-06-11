@@ -32,9 +32,11 @@ CREATE TABLE IF NOT EXISTS Cronograma (
   id INTEGER AUTO_INCREMENT PRIMARY KEY,
   usuario_id INTEGER NOT NULL,
   disciplina_id INTEGER,
+  tarefa_id INTEGER,
   data DATE NOT NULL,
   hora_inicio TIME,
   hora_fim TIME,
   recorrencia VARCHAR(20) DEFAULT 'nenhuma',
-  FOREIGN KEY (disciplina_id) REFERENCES Disciplina(id)
+  FOREIGN KEY (disciplina_id) REFERENCES Disciplina(id),
+  FOREIGN KEY (tarefa_id) REFERENCES Tarefa(id)
 );

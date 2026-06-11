@@ -12,6 +12,9 @@ const mesesNome = [
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
 ];
 
+// Cores por disciplina_id
+const coresDisciplina = ["#4f46e5", "#22c55e", "#ef4444", "#eab308", "#06b6d4", "#f97316"];
+
 const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
   const hoje = new Date();
   const [mes, setMes] = useState(hoje.getMonth());
@@ -51,20 +54,33 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
     if (!mesAtual) return [];
     const dataStr = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
 
+    // Tarefas com prazo no dia
     const tarefasPrazo = tarefas.filter((t) => {
       const prazoFormatado = t.prazo ? t.prazo.split("T")[0] : "";
       return prazoFormatado === dataStr;
     });
 
+    // Tarefas via cronograma (recorrentes)
     const tarefasRecorrentes = cronogramas
-      .filter((c) => gerarDatasRecorrentes(c).includes(dataStr))
-      .map((c) => tarefas.find((t) => t.id === c.tarefa_id))
+      .filter((c) => gerarDatasRecorrentes({
+        ...c,
+        data: c.data ? c.data.split("T")[0] : c.data,
+      }).includes(dataStr))
+      .map((c) => {
+        const tarefa = tarefas.find((t) => t.id === Number(c.tarefa_id));
+        return tarefa ? { ...tarefa, disciplina_id: c.disciplina_id || tarefa.disciplina_id } : null;
+      })
       .filter(Boolean);
 
     const ids = new Set(tarefasPrazo.map((t) => t.id));
     const todas = [...tarefasPrazo];
     tarefasRecorrentes.forEach((t) => { if (!ids.has(t.id)) todas.push(t); });
     return todas;
+  };
+
+  const getCorDisciplina = (disciplina_id) => {
+    const index = (disciplina_id || 0) % coresDisciplina.length;
+    return coresDisciplina[index];
   };
 
   const hojeStr = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
@@ -124,7 +140,13 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
               {tarefasDia.length > 0 && (
                 <div style={styles.pontinhos}>
                   {tarefasDia.slice(0, 3).map((t, i) => (
-                    <span key={i} style={styles.ponto} />
+                    <span
+                      key={i}
+                      style={{
+                        ...styles.ponto,
+                        backgroundColor: getCorDisciplina(t.disciplina_id),
+                      }}
+                    />
                   ))}
                 </div>
               )}
@@ -134,22 +156,34 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
       </div>
 
       {/* Painel do dia selecionado */}
-      {diaSelecionado && tarefasDiaSelecionado.length > 0 && (
+      {diaSelecionado && (
         <div style={styles.painel}>
           <p style={styles.painelTitulo}>
             Tarefas em {String(diaSelecionado).padStart(2, "0")}/{String(mes + 1).padStart(2, "0")}/{ano}
           </p>
-          {tarefasDiaSelecionado.map((t) => {
-            const disciplina = disciplinas.find((d) => d.id === t.disciplina_id);
-            return (
-              <div key={t.id} style={styles.tarefaItem}>
-                <span style={styles.tarefaTitulo}>{t.titulo}</span>
-                {disciplina && (
-                  <span style={styles.tarefaDisciplina}>{disciplina.nome}</span>
-                )}
-              </div>
-            );
-          })}
+          {tarefasDiaSelecionado.length === 0 ? (
+            <p style={styles.vazioPanel}>Nenhuma tarefa neste dia.</p>
+          ) : (
+            tarefasDiaSelecionado.map((t) => {
+              const disciplina = disciplinas.find((d) => d.id === Number(t.disciplina_id));
+              return (
+                <div key={t.id} style={styles.tarefaItem}>
+                  <div style={styles.tarefaInfos}>
+                    <span
+                      style={{
+                        ...styles.pontoDisciplina,
+                        backgroundColor: getCorDisciplina(t.disciplina_id),
+                      }}
+                    />
+                    <span style={styles.tarefaTitulo}>{t.titulo}</span>
+                  </div>
+                  {disciplina && (
+                    <span style={styles.tarefaDisciplina}>{disciplina.nome}</span>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       )}
     </div>
@@ -160,7 +194,6 @@ const styles = {
   container: {
     display: "flex",
     flexDirection: "column",
-    gap: "0",
     backgroundColor: "#fff",
     borderRadius: "8px",
     overflow: "hidden",
@@ -222,7 +255,6 @@ const styles = {
     width: "5px",
     height: "5px",
     borderRadius: "50%",
-    backgroundColor: "#4f46e5",
   },
   painel: {
     padding: "12px 16px",
@@ -235,12 +267,29 @@ const styles = {
     color: "#444",
     marginBottom: "8px",
   },
+  vazioPanel: {
+    fontSize: "0.85rem",
+    color: "#888",
+    textAlign: "center",
+    padding: "8px 0",
+  },
   tarefaItem: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     padding: "6px 0",
     borderBottom: "1px solid #eee",
+  },
+  tarefaInfos: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  },
+  pontoDisciplina: {
+    width: "8px",
+    height: "8px",
+    borderRadius: "50%",
+    flexShrink: 0,
   },
   tarefaTitulo: {
     fontSize: "0.88rem",

@@ -140,6 +140,18 @@ export const filtrarTarefas = (tarefasState, filtros) => {
       (t) => t.disciplina_id === filtros.disciplina_id
     );
   }
+  if (filtros.data_inicio) {
+    resultado = resultado.filter((t) => {
+      const prazo = t.prazo ? t.prazo.split("T")[0] : "";
+      return prazo >= filtros.data_inicio;
+    });
+  }
+  if (filtros.data_fim) {
+    resultado = resultado.filter((t) => {
+      const prazo = t.prazo ? t.prazo.split("T")[0] : "";
+      return prazo <= filtros.data_fim;
+    });
+  }
 
   return resultado;
 };
