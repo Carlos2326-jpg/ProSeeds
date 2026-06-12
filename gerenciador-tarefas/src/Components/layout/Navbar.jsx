@@ -3,6 +3,9 @@ import { NavLink } from "react-router-dom";
 import "./Navbar.css";
 
 const links = [
+  { path: "/dashboard", label: "🏠 Dashboard" },
+  { path: "/tarefas", label: "✅ Tarefas" },
+  { path: "/calendario", label: "📆 Calendário" },
   { path: "/temporizador", label: "⏱ Temporizador" },
   { path: "/metas", label: "🎯 Metas" },
   { path: "/progresso", label: "📊 Progresso" },

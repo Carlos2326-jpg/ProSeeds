@@ -28,14 +28,12 @@ const RotaProtegida = ({ children }) => {
   return children;
 };
 
-const RotaProtegidaComNav = ({ children }) => {
-  return (
-    <RotaProtegida>
-      <Navbar />
-      {children}
-    </RotaProtegida>
-  );
-};
+const RotaComNav = ({ children }) => (
+  <RotaProtegida>
+    <Navbar />
+    {children}
+  </RotaProtegida>
+);
 
 const RouterComponent = () => {
   return (
@@ -48,73 +46,71 @@ const RouterComponent = () => {
         <Route path="/validate-code" element={<ValidarCodigoPage />} />
         <Route path="/reset-password" element={<ResetarSenhaPage />} />
 
-        {/* Rotas protegidas — Áreas 1 e 2 */}
+        {/* Rotas protegidas com navbar */}
         <Route
           path="/dashboard"
           element={
-            <RotaProtegida>
+            <RotaComNav>
               <DashboardPage />
-            </RotaProtegida>
+            </RotaComNav>
           }
         />
         <Route
           path="/tarefas"
           element={
-            <RotaProtegida>
+            <RotaComNav>
               <TarefasPage />
-            </RotaProtegida>
+            </RotaComNav>
           }
         />
         <Route
           path="/calendario"
           element={
-            <RotaProtegida>
+            <RotaComNav>
               <CalendarioPage />
-            </RotaProtegida>
+            </RotaComNav>
           }
         />
         <Route
           path="/perfil"
           element={
-            <RotaProtegida>
+            <RotaComNav>
               <div style={{ padding: "20px" }}>
                 <h1>Seu Perfil</h1>
               </div>
-            </RotaProtegida>
+            </RotaComNav>
           }
         />
-
-        {/* Rotas protegidas — Área 3 */}
         <Route
           path="/temporizador"
           element={
-            <RotaProtegidaComNav>
+            <RotaComNav>
               <Temporizador />
-            </RotaProtegidaComNav>
+            </RotaComNav>
           }
         />
         <Route
           path="/metas"
           element={
-            <RotaProtegidaComNav>
+            <RotaComNav>
               <Metas />
-            </RotaProtegidaComNav>
+            </RotaComNav>
           }
         />
         <Route
           path="/progresso"
           element={
-            <RotaProtegidaComNav>
+            <RotaComNav>
               <Progresso />
-            </RotaProtegidaComNav>
+            </RotaComNav>
           }
         />
         <Route
           path="/planejamento"
           element={
-            <RotaProtegidaComNav>
+            <RotaComNav>
               <Planejamento />
-            </RotaProtegidaComNav>
+            </RotaComNav>
           }
         />
 
