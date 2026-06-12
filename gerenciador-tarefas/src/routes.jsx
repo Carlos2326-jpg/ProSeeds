@@ -1,55 +1,54 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './Controllers/authController';
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./Controllers/authController";
 
-// 📌 IMPORTAÇÃO DAS VIEWS (PÁGINAS)
-import { LoginPage } from './Pages/Auth/LoginPage';
-import { CadastroPage } from './Pages/Cadastro/CadastroPage';
+// Auth
+import { LoginPage } from "./Pages/Auth/LoginPage";
+import { CadastroPage } from "./Pages/Cadastro/CadastroPage";
+import { RecuperarSenhaPage } from "./Pages/Auth/RecuperarSenhaPage";
+import { ValidarCodigoPage } from "./Pages/Auth/ValidarCodigoPage";
+import { ResetarSenhaPage } from "./Pages/Auth/ResetarSenhaPage";
 
-// 🔑 Páginas do Fluxo de Recuperação de Senha
-import { RecuperarSenhaPage } from './Pages/Auth/RecuperarSenhaPage'; // Passo 1: Pede E-mail
-import { ValidarCodigoPage } from './Pages/Auth/ValidarCodigoPage';   // Passo 2: Pede Código
-import { ResetarSenhaPage } from './Pages/Auth/ResetarSenhaPage';     // Passo 3: Altera a Senha
+// Páginas internas
+import DashboardPage from "./Pages/Dashboard/DashboardPage";
+import TarefasPage from "./Pages/Tarefas/TarefasPage";
+import CalendarioPage from "./Pages/Calendario/CalendarioPage";
 
-// 📊 Páginas Internas (Protegidas)
-import DashboardPage from './Pages/Dashboard/DashboardPage'; // 🔥 IMPORTAÇÃO ATIVADA AQUI
-import TarefasPage from './Pages/Tarefas/TarefasPage';
-import CalendarioPage from './Pages/Calendario/CalendarioPage';
+// Área 3
+import Temporizador from "./Pages/Temporizador";
+import Metas from "./Pages/Metas";
+import Progresso from "./Pages/Progresso";
+import Planejamento from "./Pages/Planejamento";
+import Navbar from "./Components/layout/Navbar";
 
-/**
- * 🔒 Componente de Proteção de Rotas (Controller -> View)
- * Verifica no controlador se o usuário está autenticado.
- */
 const RotaProtegida = ({ children }) => {
   const { usuario, loading } = useAuth();
-
-  // Enquanto o Controller checa se existe um token salvo
-  if (loading) {
-    return <div className="loading-screen">Carregando...</div>;
-  }
-
-  // Se não houver usuário logado, barra o acesso e joga para o Login
-  if (!usuario) {
-    return <Navigate to="/login" replace />;
-  }
-
+  if (loading) return <div className="loading-screen">Carregando...</div>;
+  if (!usuario) return <Navigate to="/login" replace />;
   return children;
+};
+
+const RotaProtegidaComNav = ({ children }) => {
+  return (
+    <RotaProtegida>
+      <Navbar />
+      {children}
+    </RotaProtegida>
+  );
 };
 
 const RouterComponent = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* 🔓 ROTAS PÚBLICAS */}
+        {/* Rotas públicas */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<CadastroPage />} />
-
-        {/* 🔄 Fluxo de Recuperação de Senha Separado por Telas */}
         <Route path="/forgot-password" element={<RecuperarSenhaPage />} />
         <Route path="/validate-code" element={<ValidarCodigoPage />} />
         <Route path="/reset-password" element={<ResetarSenhaPage />} />
 
-        {/* 🔒 ROTAS PROTEGIDAS (Exigem Autenticação) */}
+        {/* Rotas protegidas — Áreas 1 e 2 */}
         <Route
           path="/dashboard"
           element={
@@ -58,7 +57,6 @@ const RouterComponent = () => {
             </RotaProtegida>
           }
         />
-
         <Route
           path="/tarefas"
           element={
@@ -67,7 +65,6 @@ const RouterComponent = () => {
             </RotaProtegida>
           }
         />
-
         <Route
           path="/calendario"
           element={
@@ -76,20 +73,53 @@ const RouterComponent = () => {
             </RotaProtegida>
           }
         />
-
         <Route
           path="/perfil"
           element={
             <RotaProtegida>
-              <div style={{ padding: '20px' }}><h1>Seu Perfil</h1></div>
+              <div style={{ padding: "20px" }}>
+                <h1>Seu Perfil</h1>
+              </div>
             </RotaProtegida>
           }
         />
 
-        {/* 🔄 REDIRECIONAMENTOS DE FALLBACK */}
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* Rotas protegidas — Área 3 */}
+        <Route
+          path="/temporizador"
+          element={
+            <RotaProtegidaComNav>
+              <Temporizador />
+            </RotaProtegidaComNav>
+          }
+        />
+        <Route
+          path="/metas"
+          element={
+            <RotaProtegidaComNav>
+              <Metas />
+            </RotaProtegidaComNav>
+          }
+        />
+        <Route
+          path="/progresso"
+          element={
+            <RotaProtegidaComNav>
+              <Progresso />
+            </RotaProtegidaComNav>
+          }
+        />
+        <Route
+          path="/planejamento"
+          element={
+            <RotaProtegidaComNav>
+              <Planejamento />
+            </RotaProtegidaComNav>
+          }
+        />
 
-        {/* Qualquer endereço inválido joga para o login */}
+        {/* Fallbacks */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
