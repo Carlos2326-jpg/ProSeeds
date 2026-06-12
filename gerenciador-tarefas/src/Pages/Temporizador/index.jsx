@@ -14,8 +14,7 @@ import {
   finalizarSessao,
 } from "../../Controllers/estudoController";
 import "./Temporizador.css";
-
-const DISCIPLINAS = ["Matemática", "Português", "História", "Inglês"];
+import { disciplinaService } from "../../Services/disciplinaService";
 
 function formatarTempo(segundos) {
   const m = String(Math.floor(segundos / 60)).padStart(2, "0");
@@ -43,6 +42,15 @@ export default function Temporizador() {
     pausa_curta: POMODORO_CONFIG.PAUSA_CURTA_MINUTOS * 60,
     pausa_longa: POMODORO_CONFIG.PAUSA_LONGA_MINUTOS * 60,
   };
+
+  const [disciplinas, setDisciplinas] = useState([]);
+
+  useEffect(() => {
+    disciplinaService
+      .listar()
+      .then(setDisciplinas)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (tecnica === TECNICA_TEMPO.POMODORO) {
@@ -195,9 +203,9 @@ export default function Temporizador() {
           className="disciplina-select"
         >
           <option value="">Selecione a disciplina</option>
-          {DISCIPLINAS.map((d) => (
-            <option key={d} value={d}>
-              {d}
+          {disciplinas.map((d) => (
+            <option key={d.id} value={d.nome}>
+              {d.nome}
             </option>
           ))}
         </select>

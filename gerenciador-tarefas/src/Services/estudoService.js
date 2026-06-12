@@ -43,7 +43,7 @@ export let sessoesMock = [
   },
 ];
 
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 export const estudoService = {
   // Cronogramas

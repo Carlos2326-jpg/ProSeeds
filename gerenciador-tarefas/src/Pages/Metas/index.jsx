@@ -13,8 +13,7 @@ import {
   buscarProgressoMeta,
 } from "../../Controllers/metaController";
 import "./Metas.css";
-
-const DISCIPLINAS = ["Matemática", "Português", "História", "Inglês"];
+import { disciplinaService } from "../../Services/disciplinaService";
 
 const metaVazia = {
   disciplina: "",
@@ -32,6 +31,14 @@ export default function Metas() {
   const [mostrarForm, setMostrarForm] = useState(false);
   const [erro, setErro] = useState("");
   const [mensagem, setMensagem] = useState("");
+  const [disciplinas, setDisciplinas] = useState([]);
+
+  useEffect(() => {
+    disciplinaService
+      .listar()
+      .then(setDisciplinas)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     carregarMetas();
@@ -126,9 +133,9 @@ export default function Metas() {
               onChange={(e) => setForm({ ...form, disciplina: e.target.value })}
             >
               <option value="">Selecione</option>
-              {DISCIPLINAS.map((d) => (
-                <option key={d} value={d}>
-                  {d}
+              {disciplinas.map((d) => (
+                <option key={d.id} value={d.nome}>
+                  {d.nome}
                 </option>
               ))}
             </select>

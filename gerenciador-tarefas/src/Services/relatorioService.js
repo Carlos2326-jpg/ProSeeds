@@ -7,7 +7,7 @@ import api from "./api";
 import { sessoesMock } from "./estudoService";
 import { metasMock } from "./metaService";
 
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 export const relatorioService = {
   buscarProdutividade: async (filtros = {}) => {
