@@ -1,70 +1,187 @@
-# Getting Started with Create React App
+# 🌱 ProSeeds
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> _"Sua produtividade germina aqui"_
 
-## Available Scripts
+ProSeeds é um sistema web completo de gestão de estudos. O nome é um anagrama de "desespero" — mas também carrega o significado de produtividade que germina. Aqui, cada sessão de estudo é uma semente plantada.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend:** React 19 + React Router DOM
+- **Backend:** Node.js + Express
+- **Banco de dados:** MySQL
+- **Arquitetura:** MVC (Model-View-Controller)
+- **Autenticação:** JWT (JSON Web Tokens)
+- **Gráficos:** Recharts
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## ✨ Funcionalidades
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🔐 Autenticação
 
-### `npm run build`
+- Cadastro de usuário com senha criptografada (bcrypt)
+- Login com geração de token JWT
+- Proteção de rotas — acesso negado sem autenticação
+- Logout com limpeza de sessão
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 📋 Tarefas
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- CRUD completo de tarefas
+- Subtarefas com checklist
+- Filtros por status, prioridade e disciplina
+- Tarefas recorrentes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 📆 Calendário
 
-### `npm run eject`
+- Visualização mensal de tarefas e cronogramas
+- Navegação entre meses
+- Clique no dia para ver detalhes
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### ⏱ Temporizador
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Técnica **Pomodoro** — ciclos de 25min com pausas automáticas
+- Técnica **Time Blocking** — cronômetro crescente livre
+- Técnica **Eisenhower** — foco por prioridade
+- Registro automático de sessão ao encerrar
+- Notificações visuais entre fases
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 🎯 Metas
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Criação de metas por disciplina com carga horária alvo
+- Barra de progresso em tempo real
+- Progresso atualizado automaticamente ao encerrar sessões no Temporizador
 
-## Learn More
+### 📊 Progresso
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Total de horas estudadas e sessões realizadas
+- Gráfico de barras — horas por disciplina
+- Gráfico de pizza — distribuição do tempo
+- Termômetro de metas — progresso por disciplina
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 📅 Planejamento
 
-### Code Splitting
+- Criação de cronogramas de estudo
+- Recorrência diária ou semanal
+- Validação de conflito de horário
+- Visualização integrada no Calendário
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 🏠 Dashboard
 
-### Analyzing the Bundle Size
+- Resumo de tarefas pendentes e concluídas
+- Barra de progresso geral
+- Próximos eventos do calendário
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## 🛠 Como rodar localmente
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Pré-requisitos
 
-### Advanced Configuration
+- Node.js
+- MySQL (XAMPP ou instalação direta)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### 1. Clone o repositório
 
-### Deployment
+```bash
+git clone https://github.com/Carlos2326-jpg/ProSeeds.git
+cd ProSeeds/gerenciador-tarefas
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### 2. Instale as dependências do frontend
 
-### `npm run build` fails to minify
+```bash
+npm install
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 3. Instale as dependências do backend
+
+```bash
+cd server
+npm install
+```
+
+### 4. Configure o banco de dados
+
+Acesse o phpMyAdmin ou MySQL e execute o script em `server/config/database.sql`.
+
+Depois execute também:
+
+```sql
+CREATE TABLE IF NOT EXISTS Usuario (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  senha_hash VARCHAR(255) NOT NULL,
+  foto_perfil VARCHAR(255),
+  criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Meta (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INTEGER NOT NULL,
+  disciplina VARCHAR(100) NOT NULL,
+  carga_horaria_alvo DECIMAL(5,1) NOT NULL,
+  data_inicio DATE NOT NULL,
+  data_fim DATE NOT NULL,
+  tipo VARCHAR(20) NOT NULL,
+  horas_cumpridas DECIMAL(5,1) DEFAULT 0,
+  FOREIGN KEY (usuario_id) REFERENCES Usuario(id)
+);
+
+CREATE TABLE IF NOT EXISTS SessaoEstudo (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INTEGER NOT NULL,
+  tarefa_id INTEGER,
+  disciplina VARCHAR(100) NOT NULL,
+  tecnica_usada VARCHAR(30),
+  inicio TIMESTAMP NULL DEFAULT NULL,
+  fim TIMESTAMP NULL DEFAULT NULL,
+  duracao_minutos INTEGER,
+  anotacao TEXT,
+  FOREIGN KEY (usuario_id) REFERENCES Usuario(id)
+);
+```
+
+### 5. Suba o backend
+
+```bash
+cd server
+$env:PORT=3001; node index.js   # PowerShell
+# ou
+PORT=3001 node index.js         # Linux/Mac
+```
+
+### 6. Suba o frontend
+
+```bash
+cd ..
+npm start
+```
+
+Acesse: [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 👥 Equipe
+
+Desenvolvido por 3 estudantes como projeto de P2 de Engenharia de Software.
+
+| Área   | Responsabilidade                             |
+| ------ | -------------------------------------------- |
+| Área 1 | Autenticação, Perfil, Dashboard              |
+| Área 2 | Tarefas, Subtarefas, Calendário              |
+| Área 3 | Temporizador, Metas, Progresso, Planejamento |
+
+---
+
+## 📌 Observações
+
+- Recuperação de senha está estruturada no frontend mas requer configuração de servidor SMTP para funcionar
+- As disciplinas são cadastradas por usuário e alimentam todos os formulários dinamicamente
+- O progresso das metas é atualizado em tempo real a cada sessão encerrada no Temporizador
+
+---
+
+_ProSeeds — porque toda grande colheita começa com uma semente 🌱_
