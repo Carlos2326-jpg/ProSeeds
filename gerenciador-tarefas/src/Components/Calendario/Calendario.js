@@ -1,19 +1,10 @@
-// ============================================================
-// CALENDÁRIO - Visualização Mensal (seguindo wireframe)
-// Study+
-// ============================================================
-
 import { useState } from "react";
 import { gerarDatasRecorrentes } from "../../Controllers/tarefaController.js";
+import "./Calendario.css";
 
 const diasSemana = ["Dom.", "Seg.", "Ter.", "Qua.", "Qui.", "Sex.", "Sáb."];
-const mesesNome = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro",
-];
-
-// Cores por disciplina_id
-const coresDisciplina = ["#4f46e5", "#22c55e", "#ef4444", "#eab308", "#06b6d4", "#f97316"];
+const mesesNome = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const coresDisciplina = ["#2d6a4f","#52b788","#1a472a","#74c69d","#40916c","#95d5b2"];
 
 const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
   const hoje = new Date();
@@ -21,98 +12,56 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
   const [ano, setAno] = useState(hoje.getFullYear());
   const [diaSelecionado, setDiaSelecionado] = useState(null);
 
-  const irMesAnterior = () => {
-    if (mes === 0) { setMes(11); setAno(ano - 1); }
-    else setMes(mes - 1);
-  };
-
-  const irProximoMes = () => {
-    if (mes === 11) { setMes(0); setAno(ano + 1); }
-    else setMes(mes + 1);
-  };
+  const irMesAnterior = () => { if (mes === 0) { setMes(11); setAno(ano - 1); } else setMes(mes - 1); };
+  const irProximoMes  = () => { if (mes === 11) { setMes(0); setAno(ano + 1); } else setMes(mes + 1); };
 
   const gerarDiasMes = () => {
     const primeiroDia = new Date(ano, mes, 1).getDay();
     const totalDias = new Date(ano, mes + 1, 0).getDate();
     const diasMesAnterior = new Date(ano, mes, 0).getDate();
     const dias = [];
-
-    for (let i = primeiroDia - 1; i >= 0; i--) {
-      dias.push({ dia: diasMesAnterior - i, mesAtual: false });
-    }
-    for (let i = 1; i <= totalDias; i++) {
-      dias.push({ dia: i, mesAtual: true });
-    }
+    for (let i = primeiroDia - 1; i >= 0; i--) dias.push({ dia: diasMesAnterior - i, mesAtual: false });
+    for (let i = 1; i <= totalDias; i++) dias.push({ dia: i, mesAtual: true });
     const restante = 42 - dias.length;
-    for (let i = 1; i <= restante; i++) {
-      dias.push({ dia: i, mesAtual: false });
-    }
+    for (let i = 1; i <= restante; i++) dias.push({ dia: i, mesAtual: false });
     return dias;
   };
 
   const getTarefasDoDia = (dia, mesAtual) => {
     if (!mesAtual) return [];
     const dataStr = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
-
-    // Tarefas com prazo no dia
-    const tarefasPrazo = tarefas.filter((t) => {
-      const prazoFormatado = t.prazo ? t.prazo.split("T")[0] : "";
-      return prazoFormatado === dataStr;
-    });
-
-    // Tarefas via cronograma (recorrentes)
+    const tarefasPrazo = tarefas.filter((t) => (t.prazo ? t.prazo.split("T")[0] : "") === dataStr);
     const tarefasRecorrentes = cronogramas
-      .filter((c) => gerarDatasRecorrentes({
-        ...c,
-        data: c.data ? c.data.split("T")[0] : c.data,
-      }).includes(dataStr))
-      .map((c) => {
-        const tarefa = tarefas.find((t) => t.id === Number(c.tarefa_id));
-        return tarefa ? { ...tarefa, disciplina_id: c.disciplina_id || tarefa.disciplina_id } : null;
-      })
+      .filter((c) => gerarDatasRecorrentes({ ...c, data: c.data ? c.data.split("T")[0] : c.data }).includes(dataStr))
+      .map((c) => { const t = tarefas.find((t) => t.id === Number(c.tarefa_id)); return t ? { ...t, disciplina_id: c.disciplina_id || t.disciplina_id } : null; })
       .filter(Boolean);
-
     const ids = new Set(tarefasPrazo.map((t) => t.id));
     const todas = [...tarefasPrazo];
     tarefasRecorrentes.forEach((t) => { if (!ids.has(t.id)) todas.push(t); });
     return todas;
   };
 
-  const getCorDisciplina = (disciplina_id) => {
-    const index = (disciplina_id || 0) % coresDisciplina.length;
-    return coresDisciplina[index];
-  };
+  const getCorDisciplina = (disciplina_id) => coresDisciplina[(disciplina_id || 0) % coresDisciplina.length];
 
   const hojeStr = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
   const dias = gerarDiasMes();
-
-  const tarefasDiaSelecionado = diaSelecionado
-    ? getTarefasDoDia(diaSelecionado, true)
-    : [];
+  const tarefasDiaSelecionado = diaSelecionado ? getTarefasDoDia(diaSelecionado, true) : [];
 
   return (
-    <div style={styles.container}>
+    <div className="cal-comp-container">
 
-      {/* Cabeçalho do mês */}
-      <div style={styles.cabecalhoMes}>
-        <button style={styles.btnNav} onClick={irMesAnterior}>‹</button>
-        <span style={styles.tituloMes}>{mesesNome[mes]}/{ano}</span>
-        <button style={styles.btnNav} onClick={irProximoMes}>›</button>
+      <div className="cal-comp-header">
+        <button className="cal-comp-btn-nav" onClick={irMesAnterior}>‹</button>
+        <span className="cal-comp-titulo-mes">{mesesNome[mes]} / {ano}</span>
+        <button className="cal-comp-btn-nav" onClick={irProximoMes}>›</button>
       </div>
 
-      {/* Grid do calendário */}
-      <div style={styles.grid}>
-
-        {/* Dias da semana */}
+      <div className="cal-comp-grid">
         {diasSemana.map((d) => (
-          <div key={d} style={styles.cabecalhoDia}>{d}</div>
+          <div key={d} className="cal-comp-header-dia">{d}</div>
         ))}
-
-        {/* Células dos dias */}
         {dias.map((item, index) => {
-          const dataStr = item.mesAtual
-            ? `${ano}-${String(mes + 1).padStart(2, "0")}-${String(item.dia).padStart(2, "0")}`
-            : null;
+          const dataStr = item.mesAtual ? `${ano}-${String(mes + 1).padStart(2, "0")}-${String(item.dia).padStart(2, "0")}` : null;
           const isHoje = dataStr === hojeStr;
           const isSelecionado = item.mesAtual && item.dia === diaSelecionado;
           const tarefasDia = getTarefasDoDia(item.dia, item.mesAtual);
@@ -120,33 +69,14 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
           return (
             <div
               key={index}
-              style={{
-                ...styles.celula,
-                backgroundColor: isSelecionado ? "#d0d7ff" : isHoje ? "#fff" : item.mesAtual ? "#fff" : "#f5f5f5",
-                cursor: item.mesAtual ? "pointer" : "default",
-                opacity: item.mesAtual ? 1 : 0.4,
-              }}
+              className={`cal-comp-celula${isHoje ? " cal-comp-celula--hoje" : ""}${isSelecionado ? " cal-comp-celula--selecionado" : ""}${!item.mesAtual ? " cal-comp-celula--fora" : ""}`}
               onClick={() => item.mesAtual && setDiaSelecionado(item.dia)}
             >
-              <span
-                style={{
-                  ...styles.numeroDia,
-                  color: isHoje ? "#4f46e5" : item.mesAtual ? "#333" : "#aaa",
-                  fontWeight: isHoje ? "700" : "400",
-                }}
-              >
-                {String(item.dia).padStart(2, "0")}
-              </span>
+              <span className="cal-comp-num-dia">{String(item.dia).padStart(2, "0")}</span>
               {tarefasDia.length > 0 && (
-                <div style={styles.pontinhos}>
+                <div className="cal-comp-pontinhos">
                   {tarefasDia.slice(0, 3).map((t, i) => (
-                    <span
-                      key={i}
-                      style={{
-                        ...styles.ponto,
-                        backgroundColor: getCorDisciplina(t.disciplina_id),
-                      }}
-                    />
+                    <span key={i} className="cal-comp-ponto" style={{ backgroundColor: getCorDisciplina(t.disciplina_id) }} />
                   ))}
                 </div>
               )}
@@ -155,31 +85,23 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
         })}
       </div>
 
-      {/* Painel do dia selecionado */}
       {diaSelecionado && (
-        <div style={styles.painel}>
-          <p style={styles.painelTitulo}>
-            Tarefas em {String(diaSelecionado).padStart(2, "0")}/{String(mes + 1).padStart(2, "0")}/{ano}
+        <div className="cal-comp-painel">
+          <p className="cal-comp-painel-titulo">
+            {String(diaSelecionado).padStart(2, "0")}/{String(mes + 1).padStart(2, "0")}/{ano}
           </p>
           {tarefasDiaSelecionado.length === 0 ? (
-            <p style={styles.vazioPanel}>Nenhuma tarefa neste dia.</p>
+            <p className="cal-comp-vazio">Nenhuma tarefa neste dia.</p>
           ) : (
             tarefasDiaSelecionado.map((t) => {
               const disciplina = disciplinas.find((d) => d.id === Number(t.disciplina_id));
               return (
-                <div key={t.id} style={styles.tarefaItem}>
-                  <div style={styles.tarefaInfos}>
-                    <span
-                      style={{
-                        ...styles.pontoDisciplina,
-                        backgroundColor: getCorDisciplina(t.disciplina_id),
-                      }}
-                    />
-                    <span style={styles.tarefaTitulo}>{t.titulo}</span>
+                <div key={t.id} className="cal-comp-tarefa-item">
+                  <div className="cal-comp-tarefa-infos">
+                    <span className="cal-comp-ponto-disc" style={{ backgroundColor: getCorDisciplina(t.disciplina_id) }} />
+                    <span className="cal-comp-tarefa-titulo">{t.titulo}</span>
                   </div>
-                  {disciplina && (
-                    <span style={styles.tarefaDisciplina}>{disciplina.nome}</span>
-                  )}
+                  {disciplina && <span className="cal-comp-tarefa-disc">{disciplina.nome}</span>}
                 </div>
               );
             })
@@ -188,118 +110,6 @@ const Calendario = ({ tarefas = [], cronogramas = [], disciplinas = [] }) => {
       )}
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: "#fff",
-    borderRadius: "8px",
-    overflow: "hidden",
-    border: "1px solid #ddd",
-  },
-  cabecalhoMes: {
-    backgroundColor: "#555",
-    padding: "14px 20px",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  tituloMes: {
-    color: "#fff",
-    fontWeight: "700",
-    fontSize: "1.2rem",
-  },
-  btnNav: {
-    background: "none",
-    border: "none",
-    color: "#fff",
-    fontSize: "1.5rem",
-    cursor: "pointer",
-    padding: "0 8px",
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(7, 1fr)",
-    borderTop: "1px solid #eee",
-  },
-  cabecalhoDia: {
-    textAlign: "center",
-    padding: "10px 0",
-    fontSize: "0.82rem",
-    fontWeight: "600",
-    color: "#555",
-    backgroundColor: "#f5f5f5",
-    borderBottom: "1px solid #eee",
-    borderRight: "1px solid #eee",
-  },
-  celula: {
-    padding: "8px 6px",
-    minHeight: "56px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    gap: "4px",
-    borderBottom: "1px solid #eee",
-    borderRight: "1px solid #eee",
-  },
-  numeroDia: {
-    fontSize: "0.88rem",
-  },
-  pontinhos: {
-    display: "flex",
-    gap: "3px",
-  },
-  ponto: {
-    width: "5px",
-    height: "5px",
-    borderRadius: "50%",
-  },
-  painel: {
-    padding: "12px 16px",
-    backgroundColor: "#f9f9f9",
-    borderTop: "1px solid #eee",
-  },
-  painelTitulo: {
-    fontWeight: "600",
-    fontSize: "0.88rem",
-    color: "#444",
-    marginBottom: "8px",
-  },
-  vazioPanel: {
-    fontSize: "0.85rem",
-    color: "#888",
-    textAlign: "center",
-    padding: "8px 0",
-  },
-  tarefaItem: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "6px 0",
-    borderBottom: "1px solid #eee",
-  },
-  tarefaInfos: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-  },
-  pontoDisciplina: {
-    width: "8px",
-    height: "8px",
-    borderRadius: "50%",
-    flexShrink: 0,
-  },
-  tarefaTitulo: {
-    fontSize: "0.88rem",
-    color: "#333",
-    fontWeight: "500",
-  },
-  tarefaDisciplina: {
-    fontSize: "0.78rem",
-    color: "#888",
-  },
 };
 
 export default Calendario;

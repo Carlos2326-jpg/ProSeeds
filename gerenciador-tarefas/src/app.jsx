@@ -1,6 +1,6 @@
-import React from 'react';
-import { AuthProvider } from './Controllers/authController';
-import RouterComponent from './routes'; // Importa o seu arquivo unificado com BrowserRouter
+import React from "react";
+import { AuthProvider } from "./Controllers/authController";
+import RouterComponent from "./routes";
 
 function App() {
   return (

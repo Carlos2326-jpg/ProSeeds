@@ -1,29 +1,29 @@
-// ============================================================
-// PAGE - Página Principal de Tarefas
-// Study+
-// ============================================================
-
 import { useState, useEffect } from "react";
 import TarefaList from "../../Components/Tarefas/TarefaList.js";
 import TarefaForm from "../../Components/Forms/TarefaForm.js";
 import { tarefaService, subtarefaService } from "../../Services/tarefaService.js";
-import { disciplinas } from "../../Services/model.js";
+import api from "../../Services/api.js";
+
 
 const TarefasPage = () => {
   const [tarefas, setTarefas] = useState([]);
   const [subtarefas, setSubtarefas] = useState([]);
+  const [disciplinas, setDisciplinas] = useState([]);
   const [modalAberto, setModalAberto] = useState(false);
   const [tarefaEditando, setTarefaEditando] = useState(null);
   const [carregando, setCarregando] = useState(true);
 
-  // Carrega tarefas e subtarefas do backend ao abrir a página
   useEffect(() => {
     const carregarDados = async () => {
       try {
-        const tarefasData = await tarefaService.listar({ usuario_id: 1 });
-        setTarefas(tarefasData);
+        const [tarefasData, disciplinasData] = await Promise.all([
+          tarefaService.listar({ usuario_id: 1 }),
+          api.get("/disciplinas").then((r) => r.data),
+        ]);
 
-        // Carrega subtarefas de cada tarefa
+        setTarefas(tarefasData);
+        setDisciplinas(disciplinasData);
+
         const todasSubtarefas = [];
         for (const tarefa of tarefasData) {
           const subs = await subtarefaService.listarPorTarefa(tarefa.id);
@@ -36,92 +36,48 @@ const TarefasPage = () => {
         setCarregando(false);
       }
     };
-
     carregarDados();
   }, []);
 
-  const handleNovaTarefa = () => {
-    setTarefaEditando(null);
-    setModalAberto(true);
-  };
-
-  const handleEditar = (tarefa) => {
-    setTarefaEditando(tarefa);
-    setModalAberto(true);
-  };
+  const handleNovaTarefa = () => { setTarefaEditando(null); setModalAberto(true); };
+  const handleEditar = (tarefa) => { setTarefaEditando(tarefa); setModalAberto(true); };
+  const handleCancelar = () => { setModalAberto(false); setTarefaEditando(null); };
 
   const handleSalvar = async (dados, subtarefasForm = []) => {
-  try {
-    if (tarefaEditando) {
-      // --- EDIÇÃO DE TAREFA ---
-      await tarefaService.atualizar(tarefaEditando.id, dados);
-      
-      setTarefas((prev) =>
-        prev.map((t) =>
-          t.id === tarefaEditando.id 
-            ? { 
-                ...t, 
-                ...dados, 
-                disciplina_id: dados.disciplina_id 
-              } 
-            : t
-        )
-      );
-    } else {
-      // --- CRIAÇÃO DE TAREFA ---
-      // 1. Cria a tarefa pai no banco
-      const novaTarefa = await tarefaService.criar({ ...dados, usuario_id: 1 });
-      
-      // Ajustado aqui: Variável corrigida sem espaços vazios
-      const tarefaProntaParaCard = {
-        ...dados,         
-        ...novaTarefa,     
-        disciplina_id: novaTarefa.disciplina_id !== undefined ? novaTarefa.disciplina_id : dados.disciplina_id
-      };
+    try {
+      if (tarefaEditando) {
+        await tarefaService.atualizar(tarefaEditando.id, dados);
+        setTarefas((prev) =>
+          prev.map((t) => t.id === tarefaEditando.id ? { ...t, ...dados } : t)
+        );
+      } else {
+        const novaTarefa = await tarefaService.criar({ ...dados, usuario_id: 1 });
+        const tarefaProntaParaCard = {
+          ...dados, ...novaTarefa,
+          disciplina_id: novaTarefa.disciplina_id ?? dados.disciplina_id,
+        };
+        setTarefas((prev) => [...prev, tarefaProntaParaCard]);
 
-      // Atualiza a lista de tarefas
-      setTarefas((prev) => [...prev, tarefaProntaParaCard]);
-
-      // Array temporária para acumular as novas subtarefas
-      const novasSubtarefasSalvas = [];
-
-      // 2. Salva as subtarefas sequencialmente no backend
-      for (const s of subtarefasForm) {
-        const novaSub = await subtarefaService.criar(novaTarefa.id, s.titulo);
-        
-        novasSubtarefasSalvas.push({
-          ...novaSub,
-          tarefa_id: novaTarefa.id
-        });
+        const novasSubtarefasSalvas = [];
+        for (const s of subtarefasForm) {
+          const novaSub = await subtarefaService.criar(novaTarefa.id, s.titulo);
+          novasSubtarefasSalvas.push({ ...novaSub, tarefa_id: novaTarefa.id });
+        }
+        setSubtarefas((prev) => [...prev, ...novasSubtarefasSalvas]);
       }
-
-      // 3. Atualiza o estado das subtarefas
-      setSubtarefas((prev) => [...prev, ...novasSubtarefasSalvas]);
+    } catch (err) {
+      console.error("Erro ao salvar tarefa:", err);
+      alert("Erro ao salvar tarefa. Verifique se o servidor está rodando.");
     }
-  } catch (err) {
-    console.error("Erro ao salvar tarefa:", err);
-    alert("Erro ao salvar tarefa. Verifique se o servidor está rodando.");
-  }
-
-  setModalAberto(false);
-  setTarefaEditando(null);
-};
-
-  const handleCancelar = () => {
     setModalAberto(false);
     setTarefaEditando(null);
   };
 
-  if (carregando) {
-    return (
-      <div style={styles.carregando}>
-        <p>Carregando tarefas...</p>
-      </div>
-    );
-  }
+  if (carregando)
+    return <div className="loading-screen">Carregando tarefas... 🌱</div>;
 
   return (
-    <div style={styles.container}>
+    <div className="tarefas-page">
       <TarefaList
         tarefas={tarefas}
         disciplinas={disciplinas}
@@ -141,21 +97,6 @@ const TarefasPage = () => {
       )}
     </div>
   );
-};
-
-const styles = {
-  container: {
-    minHeight: "100vh",
-    backgroundColor: "#d0d0d0",
-  },
-  carregando: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    fontSize: "1rem",
-    color: "#555",
-  },
 };
 
 export default TarefasPage;

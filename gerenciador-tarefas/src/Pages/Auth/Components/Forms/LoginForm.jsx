@@ -1,68 +1,57 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../../Controllers/authController';
-import Button from '../../../../Components/ui/Button';
-import Input from '../../../../Components/ui/Input';
-import '../../Styles/LoginForm.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../../Controllers/authController";
+import "../../Styles/LoginForm.css";
 
 export const LoginForm = ({ onEsqueceuSenha }) => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-
-  // Consome as funções e estados vindos do Controller
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
   const { handleLogin, erro, loading } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const sucesso = await handleLogin(email, senha);
     if (sucesso) {
-      window.location.href = '/dashboard';
+      window.location.href = "/dashboard";
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="login-form">
-
       {erro && <div className="error-message">{erro}</div>}
 
-      <article className="form-group">
-        <img src="#" className="img-forms" />
-
-        <Input
+      <div className="form-group">
+        <input
           type="email"
           name="email"
           placeholder="seu@email.com"
           value={email}
-          onChange={(e) => setEmail(e.target.value)} // 🔥 Conecta com o useState
+          onChange={(e) => setEmail(e.target.value)}
+          className="input-field"
         />
-      </article>
+      </div>
 
-      <article className="form-group">
-        <img src="#" className="img-forms" />
-
-        <Input
+      <div className="form-group">
+        <input
           type="password"
           name="senha"
           placeholder="Sua senha"
           value={senha}
-          onChange={(e) => setSenha(e.target.value)} // 🔥 Conecta com o useState
+          onChange={(e) => setSenha(e.target.value)}
+          className="input-field"
         />
-      </article>
+      </div>
 
-      <Button type="submit" disabled={loading}>
-        {loading ? 'Carregando...' : 'Acessar'}
-      </Button>
+      <button type="submit" disabled={loading} className="btn-login">
+        {loading ? "Carregando..." : "Entrar"}
+      </button>
 
-      <article className="form-actions">
-        <span onClick={onEsqueceuSenha} style={{ cursor: 'pointer' }}>
-          Esqueceu a senha?
-        </span>
-        <span onClick={() => navigate('/register')} style={{ cursor: 'pointer' }}>
+      <div className="form-actions">
+        <span onClick={() => navigate("/register")}>
           Deseja criar uma conta?
         </span>
-      </article>
-    </form >
+      </div>
+    </form>
   );
 };
