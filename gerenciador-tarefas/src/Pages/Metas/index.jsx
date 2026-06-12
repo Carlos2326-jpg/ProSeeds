@@ -14,6 +14,7 @@ import {
 } from "../../Controllers/metaController";
 import "./Metas.css";
 import { disciplinaService } from "../../Services/disciplinaService";
+import { formatarData, formatarHorario } from "../../Utils/formatters";
 
 const metaVazia = {
   disciplina: "",
@@ -220,7 +221,8 @@ export default function Metas() {
                 <div className="meta-info">
                   <span>Alvo: {meta.carga_horaria_alvo}h</span>
                   <span>
-                    {meta.data_inicio} → {meta.data_fim}
+                    {formatarData(meta.data_inicio)} →{" "}
+                    {formatarData(meta.data_fim)}
                   </span>
                 </div>
 

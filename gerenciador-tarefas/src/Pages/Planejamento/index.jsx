@@ -12,6 +12,7 @@ import {
 } from "../../Controllers/estudoController";
 import "./Planejamento.css";
 import { disciplinaService } from "../../Services/disciplinaService";
+import { formatarData, formatarHorario } from "../../Utils/formatters";
 
 const RECORRENCIAS = [
   { valor: "nenhuma", label: "Sem recorrência" },
@@ -236,12 +237,8 @@ export default function Planejamento() {
                 </span>
               </div>
               <div className="cronograma-info">
-                <span>
-                  📅 {c.data_inicio} → {c.data_fim}
-                </span>
-                <span>
-                  🕐 {c.horario_inicio} → {c.horario_fim}
-                </span>
+                <span>📅 {formatarData(c.data_inicio || c.data)} → {formatarData(c.data_fim || c.data)}</span>
+                <span>🕐 {formatarHorario(c.horario_inicio || c.hora_inicio)} → {formatarHorario(c.horario_fim || c.hora_fim)}</span>
               </div>
               <div className="cronograma-acoes">
                 <button
