@@ -1,19 +1,17 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { RegistroForm } from './Components/Forms/RegistroForm';
-import Header from '../Auth/Components/layout/Header';
-import Footer from '../Auth/Components/layout/Footer';
-import styles from '../Auth/Styles/Login.css'; // Reaproveitando a estrutura de grid do card
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { RegistroForm } from "./Components/Forms/RegistroForm";
+import Header from "../Auth/Components/layout/Header";
+import Footer from "../Auth/Components/layout/Footer";
 
 export const CadastroPage = () => {
   const navigate = useNavigate();
-
   return (
-    <section className={styles.containerLogin}>
+    <section>
       <Header titulo="Cadastro" />
-      <form className={styles.cardLogin}>
-        <RegistroForm onVoltarLogin={() => navigate('/login')} />
-      </form>
+      <div>
+        <RegistroForm onVoltarLogin={() => navigate("/login")} />
+      </div>
       <Footer />
     </section>
   );

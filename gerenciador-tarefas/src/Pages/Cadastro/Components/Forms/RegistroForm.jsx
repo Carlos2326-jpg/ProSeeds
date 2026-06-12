@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { useAuth } from '../../../../Controllers/authController';
-import Button from '../../../../Components/ui/Button';
-import Input from '../../../../Components/ui/Input';
-import '../../Styles/CadastroPage.css'
+import React, { useState } from "react";
+import { useAuth } from "../../../../Controllers/authController";
+import Button from "../../../../Components/ui/Button";
+import Input from "../../../../Components/ui/Input";
+import "../../Styles/CadastroPage.css";
 
 export const RegistroForm = ({ onVoltarLogin }) => {
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
 
   // Consome a função de cadastro e estados de controle
   const { handleRegister, erro, loading } = useAuth();
@@ -19,7 +19,7 @@ export const RegistroForm = ({ onVoltarLogin }) => {
     const sucesso = await handleRegister(nome, email, senha, confirmarSenha);
     if (sucesso) {
       // Redireciona para o dashboard após o cadastro com sucesso
-      window.location.href = '/dashboard';
+      window.location.href = "/dashboard";
     }
   };
 
@@ -75,12 +75,14 @@ export const RegistroForm = ({ onVoltarLogin }) => {
         />
       </article>
 
-      <Button type="submit" disabled={loading}>
-        {loading ? 'Cadastrando...' : 'Cadastrar Conta'}
-      </Button>
+      <Button
+        type="submit"
+        disabled={loading}
+        text={loading ? "Cadastrando..." : "Cadastrar Conta"}
+      />
 
       <article className="form-actions">
-        <span onClick={onVoltarLogin} style={{ cursor: 'pointer' }}>
+        <span onClick={onVoltarLogin} style={{ cursor: "pointer" }}>
           Já tem uma conta? Acesse aqui
         </span>
       </article>

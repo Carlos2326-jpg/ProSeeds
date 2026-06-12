@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000', // Substitua pela URL do seu back-end
+  baseURL: 'http://localhost:3001', // Substitua pela URL do seu back-end
 });
 
 // Interceptor para anexar o token automaticamente em cada requisição
