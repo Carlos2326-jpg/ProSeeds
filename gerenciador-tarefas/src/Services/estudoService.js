@@ -30,6 +30,17 @@ export let sessoesMock = [
     anotacao: "Revisão de integrais",
     tarefa_id: null,
   },
+    {
+    id: 2,
+    usuario_id: 1,
+    disciplina: "Português",
+    tecnica_usada: "time_blocking",
+    inicio: "2026-06-11T14:00:00",
+    fim: "2026-06-11T15:00:00",
+    duracao_minutos: 60,
+    anotacao: "Revisão de gramática",
+    tarefa_id: null,
+  },
 ];
 
 const USE_MOCK = true;
