@@ -15,7 +15,12 @@ const links = [
 export default function Navbar() {
   return (
     <nav className="navbar">
-      <div className="navbar-brand">Study+</div>
+      <div className="navbar-brand">
+        <span className="brand-leaf">🌱</span>
+        <span>
+          Pro<span className="brand-accent">Seeds</span>
+        </span>
+      </div>
       <div className="navbar-links">
         {links.map((l) => (
           <NavLink

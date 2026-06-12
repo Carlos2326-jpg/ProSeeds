@@ -1,181 +1,181 @@
-/* Centralizador externo da página */
-.profile-page-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #fcfcfc;
-  padding: 20px;
+/* ── Dashboard ──────────────────────────────────────────────── */
+
+.dashboard-container {
+  background: var(--verde-bg);
+  min-height: calc(100vh - 62px);
 }
 
-/* Painel Cinza Principal (Card Maior) */
-.profile-main-card {
-  position: relative;
-  width: 100%;
-  max-width: 850px;
-  background-color: #dcdcdc;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-}
-
-/* Topo do Card: Alinha Avatar, Dados e Botão Sair */
-.profile-top-section {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-  margin-bottom: 35px;
-  position: relative;
-}
-
-/* Ícone de Voltar (Seta no canto superior esquerdo) */
-.btn-back {
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 28px;
-  color: #333;
-  transition: transform 0.2s ease;
-}
-
-.btn-back:hover {
-  transform: scale(1.1);
-}
-
-/* Avatar do Usuário (Círculo com efeito 3D em relevo) */
-.avatar-container {
-  flex-shrink: 0;
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
-  border: 4px solid #4a5568;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #e2e8f0;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.avatar-icon-img {
-  width: 75%;
-  height: 75%;
-  color: #4a5568;
-}
-
-/* Bloco que agrupa os campos de texto (Inputs informativos) */
-.user-info-fields {
-  flex: 1;
+.dashboard-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 1.75rem;
 }
 
-/* Campos de Informação (Simulando os inputs cinza-claros com bordas finas) */
-.info-field-group {
+/* Cabeçalho de boas-vindas */
+.dashboard-header {
   display: flex;
   align-items: center;
-  background-color: #e2e8f0;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-size: 15px;
-  color: #333;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.info-field-label {
-  font-weight: 600;
-  color: #4a5568;
-  margin-right: 8px;
-}
-
-.info-field-value {
-  color: #1a202c;
-}
-
-/* Botão Sair Vermelho Arredondado */
-.btn-logout-red {
-  align-self: flex-start;
-  background-color: #cc1d24;
-  color: #ffffff;
-  border: none;
-  border-radius: 24px;
-  padding: 12px 35px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(204, 29, 36, 0.3);
-  transition:
-    background-color 0.2s ease,
-    transform 0.1s ease;
-}
-
-.btn-logout-red:hover {
-  background-color: #a51319;
-  transform: translateY(-1px);
-}
-
-/* Container Branco Inferior das Métricas */
-.metrics-white-panel {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
   justify-content: space-between;
-  gap: 20px;
 }
 
-/* Cada um dos 3 Quadrados de Métrica */
-.metric-box-gray {
-  flex: 1;
-  background-color: #cccccc;
-  border-radius: 8px;
-  padding: 18px 15px;
-  text-align: center;
+.dashboard-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--verde-escuro);
+}
+
+.dashboard-header p {
+  font-size: 0.9rem;
+  color: var(--texto-secundario);
+  margin-top: 0.2rem;
+}
+
+/* Grid de métricas */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.metric-card {
+  background: var(--branco);
+  border: 1px solid var(--cinza-200);
+  border-radius: var(--raio-lg);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--sombra-suave);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 140px;
+  gap: 0.5rem;
+  transition: box-shadow 0.2s;
 }
 
-.metric-box-title {
-  font-size: 14px;
+.metric-card:hover {
+  box-shadow: var(--sombra-media);
+}
+
+.metric-card__label {
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #2d3748;
-  line-height: 1.3;
-  margin-bottom: 10px;
+  color: var(--texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* O número gigante '0' centrado */
-.metric-box-number {
-  font-size: 48px;
-  font-weight: bold;
-  color: #1a202c;
+.metric-card__number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--verde-escuro);
   line-height: 1;
 }
 
-/* Responsividade para telas de celulares */
-@media (max-width: 650px) {
-  .profile-top-section {
+.metric-card__number--destaque {
+  color: var(--verde-claro);
+}
+
+.metric-card__action {
+  margin-top: 0.5rem;
+}
+
+/* Barra de progresso */
+.progress-bar-track {
+  background: var(--cinza-200);
+  border-radius: 999px;
+  height: 8px;
+  width: 100%;
+  margin-top: 0.25rem;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background: linear-gradient(90deg, var(--verde-medio), var(--verde-claro));
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* Seção de eventos */
+.events-section {
+  background: var(--branco);
+  border: 1px solid var(--cinza-200);
+  border-radius: var(--raio-lg);
+  padding: 1.5rem;
+  box-shadow: var(--sombra-suave);
+}
+
+.events-section h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--verde-escuro);
+  margin-bottom: 1rem;
+}
+
+.events-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--cinza-100);
+  font-size: 0.95rem;
+  color: var(--texto-principal);
+}
+
+.event-item:last-child {
+  border-bottom: none;
+}
+
+.event-item__date {
+  font-size: 0.82rem;
+  color: var(--texto-secundario);
+  background: var(--cinza-100);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.events-empty {
+  color: var(--texto-secundario);
+  font-size: 0.9rem;
+  padding: 0.5rem 0;
+}
+
+.events-action {
+  margin-top: 1.25rem;
+}
+
+/* Loading */
+.loading-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 62px);
+  color: var(--texto-secundario);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .dashboard-content {
+    padding: 1.25rem 1rem;
+  }
+
+  .metric-card__number {
+    font-size: 2rem;
+  }
+
+  .dashboard-header {
     flex-direction: column;
-    text-align: center;
-    gap: 20px;
-  }
-
-  .btn-logout-red {
-    align-self: center;
-    width: 100%;
-  }
-
-  .metrics-white-panel {
-    flex-direction: column;
-  }
-
-  .btn-back {
-    top: -15px;
-    left: 0;
+    align-items: flex-start;
+    gap: 0.25rem;
   }
 }

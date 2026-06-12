@@ -9,109 +9,88 @@ function DashboardPage() {
   const navigate = useNavigate();
 
   if (loading)
-    return <div className="loading-screen">Carregando painel...</div>;
+    return <div className="loading-screen">Carregando painel... 🌱</div>;
+
+  const pendentes = dados.totalTarefas - dados.concluidas;
 
   return (
     <div className="dashboard-container">
-      <main className="dashboard-content" style={{ padding: "20px" }}>
-        {erro && <div className="error-message">{erro}</div>}
-
-        <section
-          className="metrics-grid"
-          style={{ display: "flex", gap: "20px", marginBottom: "30px" }}
-        >
-          <div
-            className="card-metric"
-            style={{
-              background: "#f0f4f8",
-              padding: "20px",
-              borderRadius: "8px",
-              flex: 1,
-            }}
-          >
-            <h3>Tarefas Pendentes</h3>
-            <p
-              style={{ fontSize: "32px", fontWeight: "bold", color: "#2b6cb0" }}
-            >
-              {dados.totalTarefas - dados.concluidas}
-            </p>
-            <Button text="Ver Tarefas" onClick={() => navigate("/tarefas")} />
+      <main className="dashboard-content">
+        {/* Cabeçalho */}
+        <div className="dashboard-header">
+          <div>
+            <h1>Seu painel 🌱</h1>
+            <p>Acompanhe suas tarefas e compromissos de hoje.</p>
           </div>
-          <div
-            className="card-metric"
-            style={{
-              background: "#f0f4f8",
-              padding: "20px",
-              borderRadius: "8px",
-              flex: 1,
-            }}
-          >
-            <h3>Progresso Geral</h3>
-            <p
-              style={{ fontSize: "32px", fontWeight: "bold", color: "#2f855a" }}
-            >
-              {porcentagemConclusao}%
-            </p>
-            <div
-              style={{
-                background: "#e2e8f0",
-                borderRadius: "4px",
-                height: "10px",
-                width: "100%",
-                marginTop: "10px",
-              }}
-            >
+        </div>
+
+        {erro && <div className="msg-erro">{erro}</div>}
+
+        {/* Métricas */}
+        <section className="metrics-grid">
+          <div className="metric-card">
+            <span className="metric-card__label">Tarefas Pendentes</span>
+            <span className="metric-card__number">{pendentes}</span>
+            <div className="metric-card__action">
+              <button
+                className="btn-secondary"
+                style={{ padding: "0.5rem 1rem", fontSize: "0.85rem" }}
+                onClick={() => navigate("/tarefas")}
+              >
+                Ver Tarefas
+              </button>
+            </div>
+          </div>
+
+          <div className="metric-card">
+            <span className="metric-card__label">Concluídas</span>
+            <span className="metric-card__number metric-card__number--destaque">
+              {dados.concluidas}
+            </span>
+          </div>
+
+          <div className="metric-card">
+            <span className="metric-card__label">Progresso Geral</span>
+            <span className="metric-card__number">{porcentagemConclusao}%</span>
+            <div className="progress-bar-track">
               <div
-                style={{
-                  background: "#48bb78",
-                  height: "10px",
-                  borderRadius: "4px",
-                  width: `${porcentagemConclusao}%`,
-                }}
-              ></div>
+                className="progress-bar-fill"
+                style={{ width: `${porcentagemConclusao}%` }}
+              />
             </div>
           </div>
         </section>
 
-        <section
-          className="events-section"
-          style={{
-            background: "#fff",
-            padding: "20px",
-            borderRadius: "8px",
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-          }}
-        >
-          <h2>Próximos Eventos no Calendário</h2>
+        {/* Próximos eventos */}
+        <section className="events-section">
+          <h2>📆 Próximos eventos</h2>
+
           {dados.proximosEventos.length === 0 ? (
-            <p style={{ color: "#718096", marginTop: "10px" }}>
+            <p className="events-empty">
               Nenhum compromisso agendado para os próximos dias.
             </p>
           ) : (
-            <ul style={{ listStyle: "none", padding: 0, marginTop: "15px" }}>
+            <ul className="events-list">
               {dados.proximosEventos.map((evento) => (
-                <li
-                  key={evento.id}
-                  style={{
-                    padding: "10px 0",
-                    borderBottom: "1px solid #e2e8f0",
-                    display: "flex",
-                    justifyContent: "space-between",
-                  }}
-                >
+                <li key={evento.id} className="event-item">
                   <span>{evento.titulo}</span>
-                  <span style={{ color: "#718096" }}>
+                  <span className="event-item__date">
                     {new Date(evento.data).toLocaleDateString("pt-BR")}
                   </span>
                 </li>
               ))}
             </ul>
           )}
-          <Button
-            text="Abrir Calendário"
-            onClick={() => navigate("/calendario")}
-            style={{ marginTop: "15px" }}
-          />
+
+          <div className="events-action">
+            <button
+              className="btn-secondary"
+              style={{ padding: "0.5rem 1rem", fontSize: "0.85rem" }}
+              onClick={() => navigate("/calendario")}
+            >
+              Abrir Calendário
+            </button>
+          </div>
         </section>
       </main>
     </div>
