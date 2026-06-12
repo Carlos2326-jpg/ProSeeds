@@ -1,18 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { RegistroForm } from "./Components/Forms/RegistroForm";
-import Header from "../Auth/Components/layout/Header";
-import Footer from "../Auth/Components/layout/Footer";
+import "./Styles/CadastroPage.css";
 
 export const CadastroPage = () => {
   const navigate = useNavigate();
   return (
-    <section>
-      <Header titulo="Cadastro" />
-      <div>
-        <RegistroForm onVoltarLogin={() => navigate("/login")} />
+    <div className="cadastro-page">
+      <div className="cadastro-header">
+        <div className="cadastro-logo">
+          Pro<span>Seeds</span>
+        </div>
+        <p className="cadastro-tagline">Sua produtividade germina aqui 🌱</p>
       </div>
-      <Footer />
-    </section>
+      <RegistroForm onVoltarLogin={() => navigate("/login")} />
+    </div>
   );
 };

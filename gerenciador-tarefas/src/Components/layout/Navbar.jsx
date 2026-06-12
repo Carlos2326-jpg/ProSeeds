@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../Controllers/authController";
 import "./Navbar.css";
 
 const links = [
@@ -13,6 +14,8 @@ const links = [
 ];
 
 export default function Navbar() {
+  const { handleLogout } = useAuth();
+
   return (
     <nav className="navbar">
       <div className="navbar-brand">
@@ -33,6 +36,9 @@ export default function Navbar() {
             {l.label}
           </NavLink>
         ))}
+        <button className="nav-logout" onClick={handleLogout}>
+          Sair
+        </button>
       </div>
     </nav>
   );
